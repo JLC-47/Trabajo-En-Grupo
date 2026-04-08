@@ -1,0 +1,1 @@
+Se crea la estructura basica de los codigos con lo que se va a trabajar el proyecto
