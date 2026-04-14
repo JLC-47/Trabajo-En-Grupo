@@ -12,15 +12,28 @@ html{
 body{
     background-color: #241a31;
 }
-nav{
+
+.cotenedorNavegador{
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    margin: 4px;
+}
+a:hover{
+    color: #6bf1ff;
 }
 .contenedorPaginacion{
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
     font-size: 0.8rem;
+}
+button{
+    cursor: pointer;
+}
+button:hover{
+    background-color: #6bf1ff;
 }
 .contenedortargetas{
     display: flex;
@@ -35,4 +48,12 @@ button{
     border: 1px solid #762696;
     background-color: #c100ff;
     color: #241a31;
+}
+.logo{
+    width: 5vw;
+    display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+    /* background-color: #fff; */
+    
 }
