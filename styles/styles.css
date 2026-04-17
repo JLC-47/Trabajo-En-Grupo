@@ -6,6 +6,120 @@
 }
 html{
     font-size:20px ;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #241a31;
+    color: white;
+}
+
+
+header{
+    width: 100%;
+    height: 100%;
+}
+
+.nav{
+    
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+h1{
+    margin: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a{
+    text-decoration: none;
+    color: #762696;
+}
+.principal{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.sea{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.submain{
+    width: 100%;
+ }
+
+.medium{
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.target{
+    margin: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.busqueda{
+    width: 50%;
+    height: 30px;
+    border: 2px solid #a733d4c9;
+    border-radius: 10px;
+    margin-right: 10px;
+    padding: 14px;
+}
+
+.boton1{
+    padding: 6px;
+    border: 1px solid #a733d4c9;
+    border-radius: 7px;
+    color: gray;
+    cursor: pointer;
     
 }
 
+
+.boton2{
+    padding: 4px;
+    border: 1px solid #a733d4c9;
+    border-radius: 7px;
+    color: gray;
+    cursor: pointer;
+}
+
+span{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+
+
+
+.final{
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.page{
+    margin-right: 10px;
+}
+
+.numpage{
+    padding: 3px;
+    width: 2.5rem;
+}
