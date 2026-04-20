@@ -22,24 +22,24 @@
     <section id="main" class="principal">
         <div class="submain">
             <section id="search" class="sea">
-                <input type="text" placeholder="Buscar película..." class="busqueda">
-                <button class="boton1">Buscar</button>
+                <input id="inputBuscar" type="text" placeholder="Buscar película..." class="busqueda">
+                <button id="botonBuscar" class="boton1">Buscar</button>
             </section>
             <div class="medium">
-                <button class="boton2">Anterior</button>
+                <button id="botonAnterior" class="boton2">Anterior</button>
 
-                <span>Página 1</span>
+                <span id="spanPagina">Página 1</span>
 
-                <button class="boton2">Siguiente</button>
+                <button id="botonSiguiente" class="boton2">Siguiente</button>
             </div>
 
             <div class="final">
-                <label for="items" class="page">Películas por página:</label>
-                <input type="number" placeholder="Numero de Elementos" class="numpage">
+                <label for="inputLimite" class="page">Películas por página:</label>
+                <input id="inputLimite" type="number" placeholder="Numero de Elementos" class="numpage">
             </div>
         </div>
     </section>
-    <main>
+    <main id="contenedorShows">
 
         <div class="target">
             <img src="https://via.placeholder.com/150" alt="Película 1">
