@@ -123,3 +123,22 @@ span{
     padding: 3px;
     width: 2.5rem;
 }
+
+/* esto por el momento de prueba  */
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:#13011d54;
+padding:10px;
+border-radius:10px;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}

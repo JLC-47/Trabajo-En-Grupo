@@ -1,4 +1,4 @@
-import { setState, getState } from "./state.js";
+import { setState, getState } from "../state/state.js";
 
 const link = "https://api.tvmaze.com";
 
