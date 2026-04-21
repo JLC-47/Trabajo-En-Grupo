@@ -15,7 +15,7 @@ export async function searchShows(query) {
         const data = await response.json();
         const shows = data.map(item => item.show);
 
-        setState("shows", shows);
+        setState("filtered", shows);
         setState("total", shows.length);
 
         return shows;
