@@ -1,13 +1,13 @@
 const state = {
-    loading: false,
     shows : [],
+    filtered: [],
     limit : 20,
-    page: 0,
-    total: 0,
+    page: 1,
+    genre: "all"
 };
 
 
-
+// funcion para obtener llave
 export function getState(key){
     return state[key];
 }
