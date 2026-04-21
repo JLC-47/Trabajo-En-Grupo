@@ -11,47 +11,42 @@
 </head>
 
 <body>
-    <header>
-        <nav id="navegation" class="nav">
-            <a href="index.html">Inicio</a> 
-            <a href="indexFavoritos.html">Favoritos</a>
-        </nav>
-        <h1>Cine de la mejor calidad</h1>
-
+    <header class="nav">
+        <h1>RincónFlix</h1>
+        <div>
+            <a href="index.html">Inicio</a>
+            <a href="favoritos.html">Favoritos</a>
+        </div>
     </header>
-    <section id="main" class="principal">
-        <div class="submain">
-            <section id="search" class="sea">
-                <input id="inputBuscar" type="text" placeholder="Buscar película..." class="busqueda">
-                <button id="botonBuscar" class="boton1">Buscar</button>
-            </section>
-            <div class="medium">
-                <button id="botonAnterior" class="boton2">Anterior</button>
 
-                <span id="spanPagina">Página 1</span>
-
-                <button id="botonSiguiente" class="boton2">Siguiente</button>
-            </div>
-
-            <div class="final">
-                <label for="inputLimite" class="page">Películas por página:</label>
-                <input id="inputLimite" type="number" placeholder="Numero de Elementos" class="numpage">
-            </div>
-        </div>
+    <section>
+        <input id="inputBuscar" placeholder="Buscar...">
+        <button id="botonBuscar">Buscar</button>
     </section>
-    <main id="contenedorShows">
 
-        <div class="target">
-            <!-- <img src="https://via.placeholder.com/150" alt="Película 1">
-            <h3>Película 1</h3>
-            <p>Una breve descripción de la película de ejemplo.</p> -->
-            <button>❤️</button>
-        </div>
-    </main>
+    <div class="limite-container">
+        <label>Elementos por página:</label>
+        <input id="inputLimite" type="number" min="1" value="20">
+        <span id="mensajeError" class="error hidden"></span>
+    </div>
 
-    <footer>
+    <select id="filtroGenero">
+        <option value="all">Todos</option>
+    </select>
 
-    </footer>
+    <div id="historial"></div>
+
+    <main id="contenedorShows"></main>
+
+    <div class="paginacion">
+        <button id="prev">Anterior</button>
+        <span id="pagina"></span>
+        <button id="next">Siguiente</button>
+    </div>
+
+    <div id="loader" class="loader hidden">
+        <span class="logo-loader">RincónFlix</span>
+    </div>
 </body>
 
 </html>
