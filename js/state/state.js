@@ -1,9 +1,12 @@
 const state = {
-    shows : [],
-    filtered: [],
-    limit : 20,
-    page: 1,
-    genre: "all"
+  shows: [],
+  filtered: [],
+  page: 1,
+  limit: 20,
+  genre: "all",
+  loading: false,
+  total: 0
+
 };
 
 
