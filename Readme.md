@@ -3,7 +3,9 @@
 Aplicación web multipágina para explorar series de TV usando la API pública de [TVMaze](https://api.tvmaze.com).
 
 ## Integrantes
-- _(Agregar nombres aquí)_
+-Dana Arrubla
+-Janier Leudo
+-Edwin Henaho
 
 ## Funcionalidades implementadas
 
