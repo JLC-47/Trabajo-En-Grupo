@@ -13,7 +13,7 @@ export async function getShows() {
         }
         //
         const datosGuardados = await response.json();
-        setState("shows", datosGuardados);
+        setState("filtered", datosGuardados);
         //
         return await datosGuardados;
     } catch (error) {
