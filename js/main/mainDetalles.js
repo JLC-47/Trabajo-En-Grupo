@@ -1,3 +1,5 @@
-import { initDetalleUI } from "./uiDetalles.js";
+import { initDetalleUI } from "../ui/uiDetalles.js";
 
-initDetalleUI();
+document.addEventListener("DOMContentLoaded", () => {
+    initDetalleUI().catch(err => console.error("Error iniciando detalles:", err));
+});

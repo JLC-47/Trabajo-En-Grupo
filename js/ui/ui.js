@@ -1,90 +1,230 @@
-import { getShows, searchShows } from "./service.js";
-import { getState, setState } from "./state.js";
-import { guardarFavorito, eliminarFavorito, esFavorito } from "./storage.js";
+import { getShows, searchShows } from "../service/service.js";
+import { filterByGenre, getAllGenres } from "../service/serviceFilter.js";
+import { getState, setState } from "../state/state.js";
+import {
+    getFavorites, addFavorite, removeFavorite, isFavorite,
+    addToHistory, getHistory, getSavedLimit, saveLimit
+} from "../persistance/persistance.js";
 
-export async function initUI(){
+function stripHtml(html) {
+    if (!html) return "Sin descripción disponible.";
+    return html.replace(/<[^>]*>/g, "");
+}
 
- const cont=document.getElementById("contenedorShows");
- const input=document.getElementById("inputBuscar");
- const boton=document.getElementById("botonBuscar");
- const prev=document.getElementById("prev");
- const next=document.getElementById("next");
- const pagina=document.getElementById("pagina");
- const inputLimite=document.getElementById("inputLimite");
- const error=document.getElementById("mensajeError");
+function getImage(show) {
+    return show.image?.medium || show.image?.original || "https://via.placeholder.com/210x295/1a1d29/9b59b6?text=Sin+imagen";
+}
 
- const shows=await getShows();
- setState("filtered",shows);
+function getRating(show) {
+    return show.rating?.average ? `⭐ ${show.rating.average}` : "⭐ N/A";
+}
 
- function render(){
-  const data=getState("filtered");
-  const start=(getState("page")-1)*getState("limit");
-  const end=start+getState("limit");
+function renderCards(shows) {
+    const container = document.getElementById("contenedorShows");
+    container.innerHTML = "";
 
-  cont.innerHTML="";
+    if (shows.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3>No se encontraron series</h3>
+                <p>Intenta con otro término de búsqueda</p>
+            </div>`;
+        return;
+    }
 
-  data.slice(start,end).forEach(s=>{
-   const c=document.createElement("div");
-   c.className="card";
+    const limit = getState("limit");
+    const page = getState("page");
+    const start = (page - 1) * limit;
+    const pageShows = shows.slice(start, start + limit);
 
-   c.innerHTML=`
-    <img src="${s.image?.medium||""}">
-    <button class="fav-btn">${esFavorito(s.id)?"❤️":"🤍"}</button>
-    <h3>${s.name}</h3>
-   `;
+    pageShows.forEach((show, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.animationDelay = `${index * 40}ms`;
+        const fav = isFavorite(show.id);
 
-   c.querySelector("button").addEventListener("click",(e)=>{
-    e.stopPropagation();
-    esFavorito(s.id)?eliminarFavorito(s.id):guardarFavorito(s);
-    render();
-   });
+        card.innerHTML = `
+            <img src="${getImage(show)}" alt="${show.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/210x295/1a1d29/9b59b6?text=Sin+imagen'">
+            <div class="card-overlay">
+                <h3 class="card-title">${show.name}</h3>
+                <p class="card-genres">${(show.genres || []).join(", ") || "Sin género"}</p>
+                <p class="card-rating">${getRating(show)}</p>
+                <div class="card-actions">
+                    <a href="indexDetalles.html?id=${show.id}" class="btn-detail">Ver detalles</a>
+                </div>
+            </div>
+            <button class="fav-btn ${fav ? "active" : ""}" data-id="${show.id}" title="${fav ? "Quitar de favoritos" : "Agregar a favoritos"}">
+                ${fav ? "❤️" : "🤍"}
+            </button>`;
 
-   cont.appendChild(c);
-  });
+        card.querySelector(".fav-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleFavorite(show, card.querySelector(".fav-btn"));
+        });
 
-  pagina.textContent=`Página ${getState("page")}`;
- }
+        container.appendChild(card);
+    });
+}
 
- inputLimite.addEventListener("change",()=>{
-  const v=parseInt(inputLimite.value);
+function toggleFavorite(show, btn) {
+    if (isFavorite(show.id)) {
+        removeFavorite(show.id);
+        btn.textContent = "🤍";
+        btn.classList.remove("active");
+        btn.title = "Agregar a favoritos";
+    } else {
+        addFavorite(show);
+        btn.textContent = "❤️";
+        btn.classList.add("active");
+        btn.title = "Quitar de favoritos";
+        showToast(`"${show.name}" añadido a favoritos`);
+    }
+}
 
-  if(isNaN(v)||v<=0){
-   error.textContent="Número inválido";
-   error.classList.remove("hidden");
-   return;
-  }
+function renderPagination(total) {
+    const limit = getState("limit");
+    const page = getState("page");
+    const totalPages = Math.max(1, Math.ceil(total / limit));
 
-  if(v>50){
-   error.textContent="Máximo 50";
-   error.classList.remove("hidden");
-   return;
-  }
+    document.getElementById("pagina").textContent = `Página ${page} de ${totalPages}`;
+    document.getElementById("prev").disabled = page <= 1;
+    document.getElementById("next").disabled = page >= totalPages;
+}
 
-  error.classList.add("hidden");
+function populateGenres(shows) {
+    const select = document.getElementById("filtroGenero");
+    const genres = getAllGenres(shows);
+    const current = select.value;
+    select.innerHTML = `<option value="all">Todos los géneros</option>`;
+    genres.forEach(g => {
+        const opt = document.createElement("option");
+        opt.value = g;
+        opt.textContent = g;
+        if (g === current) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
 
-  setState("limit",v);
-  setState("page",1);
-  render();
- });
+function renderHistory() {
+    const container = document.getElementById("historial");
+    const history = getHistory();
+    container.innerHTML = "";
+    if (history.length === 0) return;
 
- boton.addEventListener("click",async()=>{
-  const res=await searchShows(input.value);
-  setState("filtered",res);
-  setState("page",1);
-  render();
- });
+    const label = document.createElement("span");
+    label.className = "hist-label";
+    label.textContent = "Recientes:";
+    container.appendChild(label);
 
- next.addEventListener("click",()=>{
-  setState("page",getState("page")+1);
-  render();
- });
+    history.forEach(term => {
+        const chip = document.createElement("span");
+        chip.className = "hist-item";
+        chip.textContent = term;
+        chip.addEventListener("click", () => {
+            document.getElementById("inputBuscar").value = term;
+            executeSearch(term);
+        });
+        container.appendChild(chip);
+    });
+}
 
- prev.addEventListener("click",()=>{
-  if(getState("page")>1){
-   setState("page",getState("page")-1);
-   render();
-  }
- });
+function showToast(msg) {
+    const existing = document.querySelector(".toast");
+    if (existing) existing.remove();
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 400); }, 2500);
+}
 
- render();
+function update() {
+    const genre = getState("activeGenre");
+    let shows = getState("filtered");
+    if (genre !== "all") shows = shows.filter(s => s.genres && s.genres.includes(genre));
+    renderCards(shows);
+    renderPagination(shows.length);
+}
+
+async function executeSearch(query) {
+    if (!query.trim()) return;
+    setState("page", 1);
+    setState("searchMode", true);
+    document.getElementById("contenedorShows").innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>Buscando...</p></div>`;
+
+    addToHistory(query);
+    renderHistory();
+
+    const results = await searchShows(query);
+    setState("activeGenre", "all");
+    document.getElementById("filtroGenero").value = "all";
+    populateGenres(results);
+    update();
+}
+
+
+export async function initUI() {
+    // Restore saved limit
+    const savedLimit = getSavedLimit();
+    setState("limit", savedLimit);
+    const inputLimite = document.getElementById("inputLimite");
+    inputLimite.value = savedLimit;
+
+    // Load shows
+    document.getElementById("contenedorShows").innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>Cargando series...</p></div>`;
+    const shows = await getShows();
+    populateGenres(shows);
+    renderHistory();
+    update();
+
+
+    document.getElementById("botonBuscar").addEventListener("click", () => {
+        const q = document.getElementById("inputBuscar").value;
+        executeSearch(q);
+    });
+
+    document.getElementById("inputBuscar").addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            executeSearch(e.target.value);
+        }
+    });
+
+  
+    inputLimite.addEventListener("change", () => {
+        const val = Math.max(1, Math.min(50, parseInt(inputLimite.value) || 20));
+        setState("limit", val);
+        setState("page", 1);
+        saveLimit(val);
+        update();
+    });
+
+  
+    document.getElementById("filtroGenero").addEventListener("change", e => {
+        setState("activeGenre", e.target.value);
+        setState("page", 1);
+        update();
+    });
+
+    // Pagination
+    document.getElementById("prev").addEventListener("click", () => {
+        if (getState("page") > 1) {
+            setState("page", getState("page") - 1);
+            update();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+
+    document.getElementById("next").addEventListener("click", () => {
+        const genre = getState("activeGenre");
+        let shows = getState("filtered");
+        if (genre !== "all") shows = shows.filter(s => s.genres && s.genres.includes(genre));
+        const totalPages = Math.ceil(shows.length / getState("limit"));
+        if (getState("page") < totalPages) {
+            setState("page", getState("page") + 1);
+            update();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
 }

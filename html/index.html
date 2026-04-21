@@ -1,52 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../styles/styles.css">
-    <script src="../js/main/main.js" type="module"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>RincónFlix - Inicio</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+    <script src="../js/main/main.js" type="module"></script>
 </head>
-
 <body>
     <header class="nav">
-        <h1>RincónFlix</h1>
-        <div>
-            <a href="index.html">Inicio</a>
-            <a href="favoritos.html">Favoritos</a>
-        </div>
+        <a href="index.html" class="logo-container">
+            <img src="/imagenes/Icono.png" alt="Logo" class="main-logo">
+            <h1 class="logo-text">RincónFlix</h1>
+        </a>
+        <nav class="menu">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="indexFavoritos.html">Favoritos</a>
+        </nav>
     </header>
 
-    <section>
-        <input id="inputBuscar" placeholder="Buscar...">
-        <button id="botonBuscar">Buscar</button>
+    <section class="controls-section">
+        <div class="search-box">
+            <input id="inputBuscar" type="text" placeholder="Busca tu serie favorita...">
+            <button id="botonBuscar">Buscar</button>
+        </div>
+        <div id="historial" class="historial"></div>
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label for="inputLimite">Mostrar:</label>
+                <input id="inputLimite" type="number" min="1" max="50" value="20">
+            </div>
+            <div class="filter-group">
+                <label for="filtroGenero">Género:</label>
+                <select id="filtroGenero">
+                    <option value="all">Todos los géneros</option>
+                </select>
+            </div>
+        </div>
     </section>
 
-    <div class="limite-container">
-        <label>Elementos por página:</label>
-        <input id="inputLimite" type="number" min="1" value="20">
-        <span id="mensajeError" class="error hidden"></span>
-    </div>
+    <main id="contenedorShows" class="grid-container"></main>
 
-    <select id="filtroGenero">
-        <option value="all">Todos</option>
-    </select>
-
-    <div id="historial"></div>
-
-    <main id="contenedorShows"></main>
-
-    <div class="paginacion">
-        <button id="prev">Anterior</button>
-        <span id="pagina"></span>
-        <button id="next">Siguiente</button>
-    </div>
-
-    <div id="loader" class="loader hidden">
-        <span class="logo-loader">RincónFlix</span>
-    </div>
+    <footer class="pagination">
+        <button id="prev" class="page-btn">← Anterior</button>
+        <span id="pagina">Página 1</span>
+        <button id="next" class="page-btn">Siguiente →</button>
+    </footer>
 </body>
-
 </html>

@@ -1,39 +1,19 @@
-import { getLocalStorageValue, setLocalStorageValue } from "../persistance/persistance.js";
+export function setItem(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
 
-const CLAVE_FAVORITOS = "favoritos";
-
-export function obtenerFavoritos() {
-    const favoritos = getLocalStorageValue(CLAVE_FAVORITOS);
-    if (favoritos === null) {
-        return [];
+export function getItem(key) {
+    try {
+        return JSON.parse(localStorage.getItem(key));
+    } catch {
+        return null;
     }
-    return favoritos;
 }
 
-export function guardarFavorito(show) {
-    const favoritos = obtenerFavoritos();
-    favoritos.push(show);
-    setLocalStorageValue(CLAVE_FAVORITOS, favoritos);
+export function removeItem(key) {
+    localStorage.removeItem(key);
 }
 
-export function eliminarFavorito(id) {
-    const favoritos = obtenerFavoritos();
-    const nuevosFavoritos = [];
-    favoritos.forEach(function(show) {
-        if (show.id !== id) {
-            nuevosFavoritos.push(show);
-        }
-    });
-    setLocalStorageValue(CLAVE_FAVORITOS, nuevosFavoritos);
-}
-
-export function esFavorito(id) {
-    const favoritos = obtenerFavoritos();
-    let encontrado = false;
-    favoritos.forEach(function(show) {
-        if (show.id === id) {
-            encontrado = true;
-        }
-    });
-    return encontrado;
+export function clearAll() {
+    localStorage.clear();
 }

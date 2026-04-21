@@ -1,3 +1,5 @@
-import { initFavoritosUI } from "./uiFavoritos.js";
+import { initFavoritosUI } from "../ui/uiFavoritos.js";
 
-initFavoritosUI();
+document.addEventListener("DOMContentLoaded", () => {
+    initFavoritosUI();
+});

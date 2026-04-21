@@ -1,14 +1,15 @@
 import { getState } from "../state/state.js";
 
-export function filterShowsByName(nombre) {
-    const showsList = getState("shows");
-    const resultados = [];
+export function filterByGenre(genre) {
+    const shows = getState("shows");
+    if (genre === "all") return shows;
+    return shows.filter(show => show.genres && show.genres.includes(genre));
+}
 
-    showsList.forEach(function(show) {
-        if (show.name.toLowerCase().includes(nombre.toLowerCase())) {
-            resultados.push(show);
-        }
+export function getAllGenres(shows) {
+    const genres = new Set();
+    shows.forEach(show => {
+        if (show.genres) show.genres.forEach(g => genres.add(g));
     });
-
-    return resultados;
+    return Array.from(genres).sort();
 }
