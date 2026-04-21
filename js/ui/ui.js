@@ -166,13 +166,13 @@ async function executeSearch(query) {
 
 
 export async function initUI() {
-    // Restore saved limit
+  
     const savedLimit = getSavedLimit();
     setState("limit", savedLimit);
     const inputLimite = document.getElementById("inputLimite");
     inputLimite.value = savedLimit;
 
-    // Load shows
+    
     document.getElementById("contenedorShows").innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>Cargando series...</p></div>`;
     const shows = await getShows();
     populateGenres(shows);
@@ -207,7 +207,7 @@ export async function initUI() {
         update();
     });
 
-    // Pagination
+    
     document.getElementById("prev").addEventListener("click", () => {
         if (getState("page") > 1) {
             setState("page", getState("page") - 1);
